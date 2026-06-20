@@ -131,11 +131,31 @@
 
 ### Установка зависимостей
 
+**Windows (cmd / PowerShell):**
+
+	git clone https://github.com/Microsoft/vcpkg.git
+	cd vcpkg
+	.\bootstrap-vcpkg.bat
+	.\vcpkg install grpc:x64-windows
+	.\vcpkg install gtest:x64-windows
+	.\vcpkg integrate install
+
+**Linux (bash):**
+
+	git clone https://github.com/Microsoft/vcpkg.git
+	cd vcpkg
+	./bootstrap-vcpkg.sh
+	./vcpkg install grpc:x64-linux
+	./vcpkg install gtest:x64-linux
+	./vcpkg integrate install
+
 Установите **vcpkg**:
 	
 	git clone https://github.com/Microsoft/vcpkg.git
 	cd vcpkg
 	.\bootstrap-vcpkg.bat
+
+Примечание: Если vcpkg установлен в другую папку, путь в командах сборки нужно будет указать соответствующий.
 
 Установите gRPC и Gooole Test:
 
