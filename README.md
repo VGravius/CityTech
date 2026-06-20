@@ -141,7 +141,7 @@
 
 	grpcurl -plaintext -d "{\"name\":\"temperature\",\"value\":\"23.5\",\"request_id\":\"id1\"}" localhost:50051 telemetry.v1.TelemetryService/SetParameter
 
-**Ответ:**
+**Ответ сервера (JSON):**
 
 	{
 	  "status": {
@@ -149,15 +149,17 @@
 	  }
 	}
 	
-**Ответ 2:**
+**Ответ сервера (Log):**
 
 	[2026-06-20 14:47:01.244] SetParameter: temperature - OK (value: 23.5, request_id: id1)
 
 ### ✅ 2. Успешное получение параметра
 
+**Запрос:**
+
 	grpcurl -plaintext -d "{\"name\":\"temperature\"}" localhost:50051 telemetry.v1.TelemetryService/GetParameter
 
-**Ответ:**
+**Ответ сервера (JSON):**
 
 	{
 	  "name": "temperature",
@@ -168,91 +170,103 @@
 	  }
 	}
 	
-**Ответ 2:**
+**Ответ сервера (Log):**
 
 	[2026-06-20 14:47:54.246] GetParameter: temperature - OK (value: 23.5)
 
 ### ❌ 3. Ошибка: параметр не найден
 
+**Запрос:**
+
 	grpcurl -plaintext -d "{\"name\":\"pressure\"}" localhost:50051 telemetry.v1.TelemetryService/GetParameter
 
-**Ответ:**
+**Ответ сервера (JSON):**
 
 	ERROR:
 	  Code: NotFound
 	  Message: Parameter not found
 	
-**Ответ 2:**
+**Ответ сервера (Log):**
 
 	[2026-06-20 14:49:06.086] GetParameter: pressure - NOT_FOUND
 	
 ### ❌ 4. Ошибка: повторный request_id (защита от дублей)  ------
 
-Первый запрос (успешный):
+**Первый запрос (успешный):**
 
 	grpcurl -plaintext -d "{\"name\":\"humidity\",\"value\":\"45\",\"request_id\":\"id1\"}" localhost:50051 telemetry.v1.TelemetryService/SetParameter
 
-**Ответ:**
+**Первый ответ сервера (JSON - успешный):**
 
-	{"status": {"code": 0, "message": "OK"}}
+	{
+	  "status": {
+	    "message": "OK"
+	  }
+	}
 	
-**Ответ 2:**
+**Первый ответ сервера (Log - успешный):**
 
-	[2026-06-20 14:33:37.889] SetParameter: temperature - OK (value: 23.5, request_id: id1)
+	[2026-06-20 16:01:30.086] SetParameter: humidity - OK (value: 45, request_id: id1)
 
-2 
+**Второй запрос (ошибка):**
 
 	grpcurl -plaintext -d "{\"name\":\"humidity\",\"value\":\"50\",\"request_id\":\"id1\"}" localhost:50051 telemetry.v1.TelemetryService/SetParameter
 
-**Ответ:**
+**Второй ответ сервера (JSON - ошибка):**
 
 	ERROR:
 	  Code: AlreadyExists
 	  Message: Request ID already used
 	
-**Ответ 2:**
+**Второй ответ сервера (Log - ошибка):**
 
-	[2026-06-20 14:33:37.889] SetParameter: temperature - OK (value: 23.5, request_id: id1)
+	[2026-06-20 16:01:32.576] SetParameter: humidity - ALREADY_EXISTS (request_id: id1)
 
 ### ❌ 5. Ошибка: пустое имя параметра
 
+**Запрос:**
+
 	grpcurl -plaintext -d "{\"name\":\"\",\"value\":\"23.5\",\"request_id\":\"id2\"}" localhost:50051 telemetry.v1.TelemetryService/SetParameter
 
-**Ответ:**
+**Ответ сервера (JSON):**
 
 	ERROR:
 	  Code: InvalidArgument
 	  Message: Invalid name
 	
-**Ответ 2:**
+**Ответ сервера (Log):**
 
 	[2026-06-20 14:51:13.833] ОШИБКА: SetParameter: invalid name (empty)
 
 ### ❌ 6. Ошибка: пустое значение параметра
 
+**Запрос:**
+
 	grpcurl -plaintext -d "{\"name\":\"humidity\",\"value\":\"\",\"request_id\":\"id3\"}" localhost:50051 telemetry.v1.TelemetryService/SetParameter
 
-**Ответ:**
+**Ответ сервера (JSON):**
 
 	ERROR:
 	  Code: InvalidArgument
 	  Message: Invalid value
 	
-**Ответ 2:**
+**Ответ сервера (Log):**
 
 	[2026-06-20 14:51:46.694] ОШИБКА: SetParameter: invalid value (empty)
 	
 ### ❌ 7. Ошибка: пустой request_id
 
+**Запрос:**
+
 	grpcurl -plaintext -d "{\"name\":\"humidity\",\"value\":\"45\",\"request_id\":\"\"}" localhost:50051 telemetry.v1.TelemetryService/SetParameter
 
-**Ответ:**
+**Ответ сервера (JSON):**
 
 	ERROR:
 	  Code: InvalidArgument
 	  Message: Invalid request_id
 	
-**Ответ 2:**
+**Ответ сервера (Log):**
 
 	[2026-06-20 14:52:26.568] ОШИБКА: SetParameter: invalid request_id (empty)
 
