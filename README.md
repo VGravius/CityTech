@@ -139,7 +139,7 @@
 
 **Запрос:**
 
-	grpcurl -plaintext -d "{\"name\":\"temperature\",\"value\":\"23.5\",\"request_id\":\"id1\"}" localhost:50051 telemetry.v1.TelemetryService/SetParameter
+	C:\dev\grpcurl\grpcurl.exe -plaintext -d "{\"name\":\"temperature\",\"value\":\"23.5\",\"request_id\":\"id1\"}" localhost:50051 telemetry.v1.TelemetryService/SetParameter
 
 **Ответ:**
 
