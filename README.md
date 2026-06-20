@@ -137,7 +137,7 @@
 
 ### ✅ 1. Успешное сохранение параметра
 
-**Запрос:**
+**Запрос (полный путь):**
 
 	C:\dev\grpcurl\grpcurl.exe -plaintext -d "{\"name\":\"temperature\",\"value\":\"23.5\",\"request_id\":\"id1\"}" localhost:50051 telemetry.v1.TelemetryService/SetParameter
 
@@ -149,6 +149,10 @@
 	    "message": "OK"
 	  }
 	}
+	
+**Ответ 2:**
+
+	[2026-06-20 14:33:37.889] SetParameter: temperature - OK (value: 23.5, request_id: id1)
 
 ### ✅ 2. Успешное получение параметра
 
