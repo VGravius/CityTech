@@ -73,16 +73,19 @@
 ### Установка зависимостей
 
 Установите **vcpkg**:
+
 	bash
 	git clone https://github.com/Microsoft/vcpkg.git
 	cd vcpkg
 	.\bootstrap-vcpkg.bat
 
 Установите gRPC и Gooole Test:
+
 	.\vcpkg install grpc:x64-windows
-   .\vcpkg install gtest:x64-windows
+	.\vcpkg install gtest:x64-windows
 
 Интегрируйте vcpkg в Visual Studio:
+
 	.\vcpkg integrate install
 
 ### Сборка проекта
