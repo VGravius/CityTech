@@ -1,10 +1,10 @@
-# Реализация gRPC сервиса для системы управления параметрами 
+# 🛠️ Реализация gRPC сервиса для системы управления параметрами 
 
 Сервис для управления параметрами системы, реализованный на C++ с использованием gRPC.
 
 ---
 
-## Описание проекта
+## 📋 Описание проекта
 
 Данный проект представляет собой gRPC-сервис, который позволяет:
 - **Получать** значение параметра по его имени (`GetParameter`).
@@ -15,7 +15,7 @@
 
 ---
 
-## Архитектура
+## 🏗️ Архитектура
 
 Проект построен по принципам **SOLID** и разделён на следующие компоненты:
 
@@ -61,6 +61,13 @@
 ---
 
 ## 📦 Используемые технологии
+
+![C++](https://img.shields.io/badge/C++-17-blue.svg)
+![gRPC](https://img.shields.io/badge/gRPC-1.76.0-brightgreen.svg)
+![CMake](https://img.shields.io/badge/CMake-3.15+-blue.svg)
+![Google Test](https://img.shields.io/badge/GoogleTest-1.17.0-red.svg)
+![vcpkg](https://img.shields.io/badge/vcpkg-2026-blueviolet.svg)
+![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)
 
 - **C++17** — стандарт языка.
 - **gRPC** — фреймворк для удалённого вызова процедур.
@@ -149,24 +156,11 @@
 	./vcpkg install gtest:x64-linux
 	./vcpkg integrate install
 
-Установите **vcpkg**:
-	
-	git clone https://github.com/Microsoft/vcpkg.git
-	cd vcpkg
-	.\bootstrap-vcpkg.bat
-
 Примечание: Если vcpkg установлен в другую папку, путь в командах сборки нужно будет указать соответствующий.
 
-Установите gRPC и Gooole Test:
-
-	.\vcpkg install grpc:x64-windows
-	.\vcpkg install gtest:x64-windows
-
-Интегрируйте vcpkg в Visual Studio:
-
-	.\vcpkg integrate install
-
 ### Сборка проекта
+
+**Windows (cmd / PowerShell):**
 
 	cd gRPC-Service
 	mkdir build
@@ -174,14 +168,28 @@
 	cmake .. -DCMAKE_TOOLCHAIN_FILE=C:/dev/vcpkg/scripts/buildsystems/vcpkg.cmake
 	cmake --build . --config Release
 
+**Linux (bash):**
+
+	cd gRPC-Service
+	mkdir build
+	cd build
+	cmake .. -DCMAKE_TOOLCHAIN_FILE=/путь/к/vcpkg/scripts/buildsystems/vcpkg.cmake
+	cmake --build . --config Release
+
 ### Запуск сервера
+
+**Windows (cmd / PowerShell):**
 
 	cd Release
 	gRPC-Service.exe
+
+**Linux (bash):**
+
+	cd Release
+	./gRPC-Service
 	
 После запуска вы увидите:
 	
-	C:\Users\vladcrim\source\repos\gRPC-Service\build\Release>gRPC-Service.exe
 	Telemetry gRPC Service v1.0
 	Сервер запущен на 0.0.0.0:50051
 
@@ -202,9 +210,10 @@
    - `grpcurl_1.9.3_linux_amd64.tar.gz` — для 64-битной Linux  
    - `grpcurl_1.9.3_linux_arm64.tar.gz` — для ARM-систем  
    - `grpcurl_1.9.3_macos_x86_64.tar.gz` — для macOS (если доступен)
-2. Распакуйте архив:  
-   ```bash
-   tar -xzf grpcurl_1.9.3_linux_amd64.tar.gz
+2. Распакуйте архив:
+	
+		tar -xzf grpcurl_1.9.3_linux_amd64.tar.gz
+		sudo mv grpcurl /usr/local/bin/
 
 ---
 
@@ -428,6 +437,96 @@
 
 	[2026-06-20 15:43:17.431] ОШИБКА: GetParameter: request cancelled by client (timeout)
 
+## ▶️ Запуск unit-тестов
+
+Проект покрыт unit-тестами с использованием Google Test. Тесты проверяют основные компоненты: Cache, Validator, Logger и TelemetryServiceImpl.
+
+### Команда для запуска:
+
+**Windows (cmd / PowerShell):**
+
+	cd build\Release
+	unit_tests.exe
+
+**Linux (bash):**
+
+	cd build/Release
+	./unit_tests
+
+### Пример вывода
+
+После запуска вы увидите:
+
+	[==========] Running 15 tests from 4 test suites.
+	[----------] Global test environment set-up.
+	[----------] 4 tests from CacheTest
+	[ RUN      ] CacheTest.SetAndGet
+	[       OK ] CacheTest.SetAndGet (0 ms)
+	[ RUN      ] CacheTest.GetNotFound
+	[       OK ] CacheTest.GetNotFound (0 ms)
+	[ RUN      ] CacheTest.Exists
+	[       OK ] CacheTest.Exists (0 ms)
+	[ RUN      ] CacheTest.Overwrite
+	[       OK ] CacheTest.Overwrite (0 ms)
+	[----------] 4 tests from CacheTest (0 ms total)
+	
+	[----------] 5 tests from ValidatorTest
+	[ RUN      ] ValidatorTest.ValidateName
+	[       OK ] ValidatorTest.ValidateName (0 ms)
+	[ RUN      ] ValidatorTest.ValidateValue
+	[       OK ] ValidatorTest.ValidateValue (0 ms)
+	[ RUN      ] ValidatorTest.ValidateRequestId
+	[       OK ] ValidatorTest.ValidateRequestId (0 ms)
+	[ RUN      ] ValidatorTest.RequestIdUniqueness
+	[       OK ] ValidatorTest.RequestIdUniqueness (0 ms)
+	[ RUN      ] ValidatorTest.RequestIdMultiple
+	[       OK ] ValidatorTest.RequestIdMultiple (0 ms)
+	[----------] 5 tests from ValidatorTest (2 ms total)
+	
+	[----------] 3 tests from LoggerTest
+	[ RUN      ] LoggerTest.Log
+	[2026-06-20 20:03:24.846] GetParameter: temperature - OK (value: 23.5)
+	[       OK ] LoggerTest.Log (3 ms)
+	[ RUN      ] LoggerTest.LogError
+	[2026-06-20 20:03:24.851] ╬╪╚┴╩└: Test error message
+	[       OK ] LoggerTest.LogError (0 ms)
+	[ RUN      ] LoggerTest.LogWithoutDetails
+	[2026-06-20 20:03:24.852] SetParameter: temperature - OK
+	[       OK ] LoggerTest.LogWithoutDetails (0 ms)
+	[----------] 3 tests from LoggerTest (7 ms total)
+	
+	[----------] 3 tests from TelemetryServiceTest
+	[ RUN      ] TelemetryServiceTest.CompilationTest
+	[       OK ] TelemetryServiceTest.CompilationTest (0 ms)
+	[ RUN      ] TelemetryServiceTest.ValidationTest
+	[       OK ] TelemetryServiceTest.ValidationTest (0 ms)
+	[ RUN      ] TelemetryServiceTest.CacheTest
+	[       OK ] TelemetryServiceTest.CacheTest (0 ms)
+	[----------] 3 tests from TelemetryServiceTest (7 ms total)
+	
+	[----------] Global test environment tear-down
+	[==========] 15 tests from 4 test suites ran. (23 ms total)
+	[  PASSED  ] 15 tests.
+
+**Где лежат тесты:**
+
+Исходный код тестов находится в папке unit_tests/ в корне проекта. Каждый файл покрывает отдельный компонент сервиса.
+
+	unit_tests/
+	├── test_cache.cpp # Тесты для класса Cache
+	├── test_validator.cpp # Тесты для класса Validator
+	├── test_logger.cpp # Тесты для класса Logger
+	└── test_telemetry_service.cpp # Тесты для класса TelemetryServiceImpl
+
+**Результат работы**
+
+Все 15 тестов успешно пройдены. Это подтверждает корректность работы ключевых компонентов сервиса:
+
+	1. Cache — сохранение, получение, проверка существования, перезапись.
+	2. Validator — валидация имени, значения, request_id, уникальность.
+	3. Logger — логирование операций и ошибок.
+	4. TelemetryServiceImpl — интеграция компонентов в сервисе.
+
 ## 📊 Итоговый вывод
 
 Все обязательные и дополнительные требования тестового задания выполнены.
@@ -448,3 +547,14 @@
 | README с архитектурой           | Выполнено  |
 
 Сервис готов к использованию.
+
+## 📄 Лицензия
+
+Проект создан в рамках тестового задания на реализацию gRPC сервиса
+
+## 👤 Автор проекта
+
+**Владислав (vladcrim/VGravius)**
+
+
+
