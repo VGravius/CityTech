@@ -73,7 +73,7 @@
 ### Установка зависимостей
 
 Установите **vcpkg**:
-	```bash
+	bash
 	git clone https://github.com/Microsoft/vcpkg.git
 	cd vcpkg
 	.\bootstrap-vcpkg.bat
@@ -98,7 +98,7 @@
 	cd Release
 	gRPC-Service.exe
 	
-	После запуска вы увидите:
+После запуска вы увидите:
 	
 	Telemetry gRPC Service v1.0
 	Сервер запущен на 0.0.0.0:50051
